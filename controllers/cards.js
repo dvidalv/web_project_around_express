@@ -18,7 +18,11 @@ const createCard = async (req, res) => {
     const card = await Card.create({ name, link, owner: req.user._id });
     res.status(200).send(card);
   } catch (err) {
-    res.status(500).send({ message: err.message });
+    if (err.name === 'ValidationError') {
+      res.status(400).send({ message: 'Invalid card data' });
+    } else {
+      res.status(500).send({ message: err.message });
+    }
   }
 };
 
@@ -27,18 +31,18 @@ const getCardById = async (req, res) => {
   let card;
   try {
     const { cardId } = req.params;
-    card = await Card.findById(cardId);
-    if (!card) {
-      return res.status(404).send({ message: 'No card found with this id' });
-    }
+    card = await Card.findById(cardId).orFail();
+    return card;
   } catch (err) {
-    res.status(500).send({ message: err.message });
+    if (err.name === 'CastError') {
+      return res.status(400).send({ message: 'Invalid cardId' });
+    }
+    return res.status(404).send({ message: 'No card found with this id' });
   } finally {
     if (card) {
       res.status(200).send(card);
     }
   }
-  return null;
 };
 
 // DELETE /cards/:cardId
@@ -48,13 +52,13 @@ const deleteCard = async (req, res) => {
     if (!cardId) {
       return res.status(400).send({ message: 'cardId is required' });
     }
-    const card = await Card.findByIdAndDelete(cardId);
-    if (!card) {
-      return res.status(404).send({ message: 'No card found with this id' });
-    }
+    const card = await Card.findByIdAndDelete(cardId).orFail();
     return res.status(200).send(card);
   } catch (err) {
-    return res.status(500).send({ message: err.message });
+    if (err.name === 'CastError') {
+      return res.status(400).send({ message: 'Invalid cardId' });
+    }
+    return res.status(404).send({ message: 'No card found with this id' });
   }
 };
 

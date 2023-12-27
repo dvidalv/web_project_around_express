@@ -2,27 +2,71 @@
 
 # Proyecto Web Express
 
-Este proyecto es una aplicación web construida con Express.js. Utiliza el middleware Morgan para el registro de solicitudes HTTP y maneja rutas para tarjetas y usuarios.
+# Aplicación de Tarjetas y Usuarios
 
-## Archivos principales
+Esta es una aplicación de backend que permite a los usuarios crear, leer, actualizar y eliminar tarjetas y usuarios. La aplicación está construida con Node.js, Express y MongoDB.
 
-### `app.js`
+## Instalación
 
-Este es el archivo principal de la aplicación. Configura el middleware, define las rutas y inicia el servidor.
+Para instalar y ejecutar esta aplicación, necesitarás tener Node.js y MongoDB instalados en tu máquina.
 
-### `controllers/cardsControllers.js`
+1. Clona este repositorio en tu máquina local.
+2. Navega hasta el directorio del proyecto.
+3. Ejecuta `npm install` para instalar todas las dependencias del proyecto.
+4. Inicia el servidor MongoDB en tu máquina.
+5. Ejecuta `npm start` para iniciar la aplicación.
 
-Este archivo define el controlador para las tarjetas. Contiene una función para leer los datos de las tarjetas desde un archivo JSON y una función para manejar las solicitudes GET a la ruta `/cards`.
+## Uso
 
-### `controllers/usersController.js`
+La aplicación expone las siguientes rutas:
 
-Este archivo define el controlador para los usuarios. Contiene una función para leer los datos de los usuarios desde un archivo JSON, una función para manejar las solicitudes GET a la ruta `/users`, y una función para manejar las solicitudes GET a la ruta `/users/:id`.
+### Usuarios
 
-## Cómo ejecutar la aplicación
+- `GET /users`: Devuelve todos los usuarios.
+- `GET /users/:id`: Devuelve información sobre un usuario específico.
+- `POST /users`: Crea un nuevo usuario.
+- `DELETE /users/:id`: Elimina un usuario.
+- `PATCH /users/me`: Actualiza el perfil del usuario.
+- `PATCH /users/me/avatar`: Actualiza el avatar del usuario.
 
-1. Clona el repositorio.
-2. Ejecuta `npm install` para instalar las dependencias.
-3. Ejecuta `npm start` para iniciar el servidor. Por defecto, el servidor se iniciará en el puerto 3000.
+### Tarjetas
+
+- `GET /cards`: Devuelve todas las tarjetas.
+- `POST /cards`: Crea una nueva tarjeta.
+- `GET /cards/:cardId`: Devuelve una tarjeta por su id.
+- `DELETE /cards/:cardId`: Elimina una tarjeta.
+- `PUT /cards/:cardId/likes`: Da "like" a una tarjeta.
+- `DELETE /cards/:cardId/likes`: Quita el "like" a una tarjeta.
+
+## Modelos de Datos
+
+La aplicación utiliza dos modelos de datos principales: `User` y `Card`.
+
+### User
+
+Un usuario tiene los siguientes campos:
+
+- `name`: Nombre del usuario (cadena de texto, requerido, entre 2 y 30 caracteres).
+- `about`: Información sobre el usuario (cadena de texto, requerido, entre 2 y 30 caracteres).
+- `avatar`: URL del avatar del usuario (cadena de texto, requerido, debe ser una URL válida).
+
+### Card
+
+Una tarjeta tiene los siguientes campos:
+
+- `name`: Nombre de la tarjeta (cadena de texto, requerido, entre 2 y 30 caracteres).
+- `link`: URL de la tarjeta (cadena de texto, requerido, debe ser una URL válida).
+- `owner`: ID del usuario que creó la tarjeta (ObjectId, requerido).
+- `likes`: Array de IDs de usuarios que han dado "like" a la tarjeta (array, por defecto vacío).
+- `createdAt`: Fecha de creación de la tarjeta (fecha, por defecto la fecha actual).
+
+## Contribución
+
+Si deseas contribuir a este proyecto, por favor, haz un fork del repositorio y envía un pull request con tus cambios. Todos los pull requests serán revisados y considerados.
+
+## Licencia
+
+Esta aplicación está bajo la licencia MIT.
 
 ## Nota
 

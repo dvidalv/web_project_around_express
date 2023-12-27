@@ -27,7 +27,7 @@ const getUserById = async (req, res) => {
   try {
     const { id } = req.params;
     const user = await User.findById(id).orFail(() => {
-      const error = new Error('No se ha encontrado ninguna tarjeta con esa id');
+      const error = new Error('No se ha encontrado ningun usuario con esa id');
       error.statusCode = 404;
       throw error; // Recuerda arrojar un error para que .catch lo maneje en lugar de .then
     });
@@ -43,10 +43,10 @@ const getUserById = async (req, res) => {
       user,
     });
   } catch (err) {
-    console.log(err);
     return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
       status: 'error',
       message: 'Unexpected error',
+      error: err.message, // Añade el mensaje de error
     });
   }
 };
@@ -61,19 +61,19 @@ const createUser = async (req, res) => {
       avatar,
     };
     const user = await User.create(newUser);
-    const ERROR_CODE = 400;
-    if (!user) {
-      return res.status(ERROR_CODE).json({
-        status: 'error',
-        message: 'User not created',
-      });
-    }
     return res.status(httpStatus.CREATED).json({
       status: 'success',
       message: 'User created',
       user,
     });
   } catch (err) {
+    console.log(err);
+    if (err.name === 'ValidationError') {
+      return res.status(httpStatus.BAD_REQUEST).json({
+        status: 'error',
+        message: 'Invalid user data',
+      });
+    }
     return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
       status: 'error',
       message: 'Unexpected error',
@@ -114,7 +114,6 @@ const deleteUser = async (req, res) => {
 const updateProfile = async (req, res) => {
   try {
     const { name, about } = req.body;
-    console.log(req.user._id);
     const user = await User.findByIdAndUpdate(
       req.user._id,
       { name, about },
