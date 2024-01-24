@@ -1,4 +1,5 @@
 const httpStatus = require('http-status');
+
 const Card = require('../models/card');
 
 // GET /cards — devuelve todas las tarjetas
